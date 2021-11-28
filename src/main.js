@@ -28,6 +28,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Toolbar from 'primevue/toolbar';
 import Dialog from 'primevue/dialog';
+import Breadcrumb from 'primevue/breadcrumb';
 
 import 'primevue/resources/themes/saga-blue/theme.css'       //theme
 import 'primevue/resources/primevue.min.css'                 //core css
@@ -45,6 +46,8 @@ import 'primeflex/src/flexbox/_flexbox.scss';
 import 'primeflex/src/_spacing.scss';
 import 'primeflex/src/_elevation.scss';
  */
+
+
 const app = createApp(App);
 
 app.use(store);
@@ -76,6 +79,7 @@ app.component('Column',Column);
 app.component('ColumnGroup',ColumnGroup);
 app.component('Toolbar',Toolbar);
 app.component('Dialog',Dialog);
+app.component('Breadcrumb',Breadcrumb);
 
 app.mount('#app');
 
