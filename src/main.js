@@ -29,6 +29,9 @@ import ColumnGroup from 'primevue/columngroup';
 import Toolbar from 'primevue/toolbar';
 import Dialog from 'primevue/dialog';
 import Breadcrumb from 'primevue/breadcrumb';
+import Checkbox from 'primevue/checkbox';
+import InlineMessage from 'primevue/inlinemessage';
+import Textarea from 'primevue/textarea';
 
 import 'primevue/resources/themes/saga-blue/theme.css'       //theme
 import 'primevue/resources/primevue.min.css'                 //core css
@@ -52,7 +55,51 @@ const app = createApp(App);
 
 app.use(store);
 app.use(router);
-app.use(PrimeVue, {ripple: true, inputStyle: 'filled'});
+app.use(PrimeVue, {
+        ripple: true, 
+        inputStyle: 'filled',
+        locale: {
+            accept: 'Aceptar',
+            reject: 'Rechazar',
+            dayNames: ["Domingo", "Lunes","Martes", "Miércoles", "Jueves","Viernes","Sábado" ],
+            dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+            dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+            monthNames: [
+              "Enero",
+              "Febrero",
+              "Marzo",
+              "Abril",
+              "Mayo",
+              "Junio",
+              "Julio",
+              "Agosto",
+              "Septiembre",
+              "Octubre",
+              "Noviembre",
+              "Diciembre",
+            ],
+            monthNamesShort: [
+              "Ene",
+              "Feb",
+              "Mar",
+              "Abr",
+              "May",
+              "Jun",
+              "Jul",
+              "Ago",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dic",
+            ],
+            today: "Hoy",
+            clear: "Borrar",
+            weekHeader: "Sm",
+            es: {
+               firstDayOfWeek: 1
+            },
+        }
+});
 app.use(ToastService);
 
 app.component('Button',Button);
@@ -80,6 +127,9 @@ app.component('ColumnGroup',ColumnGroup);
 app.component('Toolbar',Toolbar);
 app.component('Dialog',Dialog);
 app.component('Breadcrumb',Breadcrumb);
+app.component('Checkbox',Checkbox);
+app.component('InlineMessage',InlineMessage);
+app.component('Textarea',Textarea);
 
 app.mount('#app');
 

@@ -1,0 +1,55 @@
+Desto es el borrador que se utilizo en Turnos.
+
+
+    let PlaniTurnos = ref()
+
+    let repetidos = []
+
+    let nuevoArray = []
+    
+    // const array = [{"id_turno":"3","id_deporte":"2","id_usuario":"1","f_turno":"2021-12-09 08:30:00","cancelado":"0"},
+    //               {"id_turno":"4","id_deporte":"2","id_usuario":"2","f_turno":"2021-12-09 10:00:00","cancelado":"0"},
+    //               {"id_turno":"5","id_deporte":"2","id_usuario":"2","f_turno":"2021-12-09 12:00:00","cancelado":"0"},
+    //               {"id_turno":"6","id_deporte":"2","id_usuario":"2","f_turno":"2021-12-10 11:00:00","cancelado":"0"},
+    //               {"id_turno":"7","id_deporte":"2","id_usuario":"3","f_turno":"2021-12-10 12:00:00","cancelado":"0"},
+    //               {"id_turno":"8","id_deporte":"2","id_usuario":"7","f_turno":"2021-12-10 13:00:00","cancelado":"0"},
+    //               {"id_turno":"9","id_deporte":"2","id_usuario":"4","f_turno":"2021-12-10 13:00:00","cancelado":"0"},
+    //               {"id_turno":"10","id_deporte":"2","id_usuario":"5","f_turno":"2021-12-10 13:00:00","cancelado":"0"},
+    //               {"id_turno":"11","id_deporte":"2","id_usuario":"3","f_turno":"2021-12-10 17:34:31","cancelado":"0"},
+    //               {"id_turno":"12","id_deporte":"2","id_usuario":"6","f_turno":"2021-12-10 13:00:00","cancelado":"0"},
+    //               {"id_turno":"13","id_deporte":"2","id_usuario":"6","f_turno":"2021-12-13 09:00:00","cancelado":"0"}]
+
+    const url = inject("url");
+
+    const prueba =  async  () => {
+        await axios.post(url, {opcion:4, selecDeporte: 2})
+          .then(response =>{
+              PlaniTurnos.value = response.data;       
+              
+              console.log('Datos de PlaniTurnos: ',PlaniTurnos.value)
+
+              nuevoArray.value = NuevoArray(PlaniTurnos.value);
+              console.log('ARRAY SOLO FECHAS: ',nuevoArray.value);
+
+
+
+              repetidos.value = contarRepetidos(nuevoArray.value);
+              console.log('Contador de Fechas: ',repetidos.value)
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });   
+    }
+
+ 
+     const NuevoArray =  (array) => {
+           return  array.map(({f_turno}) => f_turno);
+
+     }
+
+    const contarRepetidos = (datos) => {
+            return datos.reduce(( a, d) =>  (a[d] ? a[d]  += 1 : a[d] = 1, a), {});
+    }
+
+    return {prueba}
