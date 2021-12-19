@@ -99,7 +99,7 @@
                      return 
                 }
 
-                await axios.post(url, {opcion: 1,  email: emailLog.value })
+                await axios.post(url, {opcion: 1,  mail: emailLog.value })
                     .then( response =>{
                         usuario.value = response.data
                     })

@@ -63,7 +63,7 @@ app.use(PrimeVue, {
             reject: 'Rechazar',
             dayNames: ["Domingo", "Lunes","Martes", "Miércoles", "Jueves","Viernes","Sábado" ],
             dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-            dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+            dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
             monthNames: [
               "Enero",
               "Febrero",
@@ -95,9 +95,14 @@ app.use(PrimeVue, {
             today: "Hoy",
             clear: "Borrar",
             weekHeader: "Sm",
-            es: {
-               firstDayOfWeek: 1
-            },
+            firstDayOfWeek: 0,
+            dateFormat: 'mm/dd/yy',
+            weak: 'Weak',
+            medium: 'Medium',
+            strong: 'Strong',
+            passwordPrompt: 'Ingrese Clave',
+            emptyFilterMessage: 'No se encontraron resultados',
+            emptyMessage: 'No hay opciones disponibles'
         }
 });
 app.use(ToastService);
