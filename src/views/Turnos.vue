@@ -112,7 +112,6 @@
           await axios.post(url, {opcion:2})
           .then(response=>{
             deportes.value = response.data;
-         //   console.log("depostes", deportes.value);
           })
           .catch(function (error) {
             console.log(error);
@@ -122,8 +121,6 @@
       const validoMail = async (e) => {
 
           if(e.target.value){
-  //            console.log('blur', e.target.value);
-
               if(valEmail.test(mailUsuario.value)){
                 focusOut.value = false ;
               } else{
@@ -174,21 +171,20 @@
         // })
       // **************************
 
-      const cambioDeporte =  async () => {
+      const cambioDeporte =   async () => {
         
         if(selecDeporte.value === '' || selecDeporte.value === undefined){
-            console.log("SI EL DEPORTE VACIO: ",selecDeporte.value)
             return false
         }
         habilitoDrop.value = true ;
 
-         console.log("QUE TIENE DEPORTE ?: ",selecDeporte.value)
+      //   console.log("QUE TIENE DEPORTE ?: ",selecDeporte.value)
  // *********************** ARRAY CON LOS TURNOS QUE HAY DESDE HOY EN ADELANTE DE 1 DEPORTE PARTIC. (TABLA TURNOS) **********
         await axios.post(url, {opcion:4, selecDeporte: selecDeporte.value})
           .then(response =>{
               PlaniTurnos.value = response.data;       
               
-                console.log('Datos de PlaniTurnos en calendar: ',PlaniTurnos.value)
+             //   console.log('Datos de PlaniTurnos en calendar: ',PlaniTurnos.value)
           })
           .catch(function (error) {
             console.log(error);
@@ -208,14 +204,16 @@
           return 
         }
 
- //       f_turno_dh.value.forEach(element => {
+          // probar el for of
+          // for (const iterator of f_turno_dh.value) {
+            
+          // }
 
+          // ninguno de los 2 for funciona no espera el async - await
+ //       f_turno_dh.value.forEach(element => {
       //  for(let i=0; i<f_turno_dh.value.length; i++){
 
-            // const posicion = element.turno.indexOf(":");   //1 
-            // const largo = element.turno.length;            // 4
-            // const hora = element.turno.substr(0, posicion );
-            // let minuto = element.turno.substr(posicion+1, largo );
+
             let i=0
             let posicion = f_turno_dh.value[i].turno.indexOf(":");   //1 
             let largo = f_turno_dh.value[i].turno.length;            // 4

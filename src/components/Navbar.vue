@@ -34,10 +34,20 @@
               <router-link class="nav-link" to="/news">Novedades</router-link> 
             </li>
 
-            <li class="nav-item" v-if="logueado">
-              <router-link class="nav-link" to="/usuarios">Alta Usuarios</router-link> 
+            <li class="nav-item dropdown" v-if="logueado">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                 data-bs-toggle="dropdown" aria-expanded="false">
+                Administrador
+              </a>
+              <!-- <router-link class="nav-link" to="/usuarios">Alta Usuarios</router-link>  -->
+              <ul class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <li><router-link class="dropdown-item" to="/usuarios">Administrar Usuarios</router-link></li>
+                <li><router-link class="dropdown-item" to="/adminturnos">Administrar Turnos</router-link></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><router-link class="dropdown-item" to="/adminfechas">Fechas de Cierre</router-link></li>
+                <li><router-link class="dropdown-item" to="/configuracion">Configuración</router-link></li>
+              </ul>
             </li>
-
           </ul>
 
           <ul class="navbar-nav ml-auto">
@@ -75,3 +85,6 @@
     }
   }
 </script>
+
+
+

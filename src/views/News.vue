@@ -1,9 +1,7 @@
 <template>
-  <h1 class="text-center">Noticias importantes de Benahavis</h1>
-  <div class="container surface-100 h-30rem">
-    <h3 class="ml-2 pt-4">Lorem ipsum, dolor sit amet consectetur</h3>
-    <div class="text-center p-4">
-      <p >
+    <div class="container surface-200 mt-4 p-2">
+      <h1>NEWS</h1>
+      <p class="container justify-content-center mt-3">
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. In nihil blanditiis modi veniam ad! Deserunt sapiente earum quasi exercitationem, doloremque iste reiciendis itaque ad ullam soluta quis inventore dolores. Error?
         Culpa repellendus iste ipsam a labore aliquid accusamus tempora numquam veritatis voluptate ratione, officiis deleniti architecto eligendi nulla minus nihil odit illo explicabo autem doloribus! Distinctio praesentium autem in rem.
         Sunt, quod suscipit ut earum voluptates consectetur deleniti quae, omnis debitis velit id eum laborum itaque perspiciatis ullam atque rerum quam eveniet sed cupiditate excepturi ad obcaecati dicta? Aliquid, ab?
@@ -17,27 +15,7 @@
       </p>
       <p>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quisquam, nobis est error qui optio debitis corporis ipsam delectus eos facere animi explicabo consequatur consectetur iusto tempore soluta ducimus temporibus accusantium!
-      </p>
+      </p> 
+  
     </div>
-   
-  </div>
 </template>
-
-<script>
-import {ref} from 'vue';
-
-export default {
-  sertup(){
-
-    const nombre = ref();
-    const apellido = ref();
-    const mail1 = ref();
-    const mail2 = ref();
-    const mensajeUsuario = ref();
-  }
-}
-</script>
-
-<style>
-
-</style>;

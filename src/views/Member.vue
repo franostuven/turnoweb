@@ -11,17 +11,16 @@
 </template>
 
 <script>
-import {inject, onMounted, ref} from 'vue';
-import Login from '../components/Login.vue';
+  import Login from '../components/Login.vue';
 
-export default {
-  components:{
-    Login
-  },
-  setup(){
+  export default {
+    components:{
+      Login
+    },
+    setup(){
 
 
+    }
+      
   }
-     
-}
 </script>

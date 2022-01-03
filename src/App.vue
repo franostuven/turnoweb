@@ -26,8 +26,9 @@ export default {
       })
 
      let url ="http://localhost/turno-web/src/libreries/crud.php"; // DESARROLLO
-     let logueado = ref(false);
      // const url = "crud.php";  // produccion // DESARROLLO
+     //let url = "crudgym.php"    // DESARROLLO (cambio de nombre por conflicto de estribo. misma host)
+     let logueado = ref(false);
 
       provide('url', url);
       provide('logueado', logueado);

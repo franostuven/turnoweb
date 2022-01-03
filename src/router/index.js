@@ -40,8 +40,29 @@ const routes = [
     path: '/contacto',
     name: 'Contacto',
     component: () => import(/* webpackChunkName: "about" */ '../views/Contacto.vue')
+  },
+  {
+    path: '/usuarios',
+    name: 'Usuarios',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Usuarios.vue')
+  },
+  {
+    path: '/adminturnos',
+    name: 'AdminTurnos',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminTurnos.vue')
+  },
+  {
+    path: '/adminfechas',
+    name: 'AdminFechas',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminFechas.vue')
+  },
+  {
+    path: '/configuracion',
+    name: 'Configuracion',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Configuracion.vue')
   }
 ]
+
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

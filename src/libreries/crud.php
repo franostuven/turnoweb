@@ -26,6 +26,15 @@ $mensaje = (isset($_POST['mensaje'])) ? $_POST['mensaje'] : '';
 //$fturno = (isset($_POST['fturno'])) ? $_POST['fturno'] : '';   da una hora menos y repite la hora
 $fturno = date('Y-m-d H:i:s', strtotime((isset($_POST['fturno'])) ? $_POST['fturno'] : ''));
 
+$bloqueado = (isset($_POST['bloqueado'])) ? $_POST['bloqueado'] : '';
+$clave = (isset($_POST['clave'])) ? $_POST['clave'] : '';
+$domicilio = (isset($_POST['domicilio'])) ? $_POST['domicilio'] : '';
+$telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
+$f_nacimiento = date('Y-m-d H:i:s', strtotime((isset($_POST['f_nacimiento'])) ? $_POST['f_nacimiento'] : ''));
+
+$id_turno = (isset($_POST['id_turno'])) ? $_POST['id_turno'] : '';
+
+
 // $path1 = (isset($_POST['path1'])) ? $_POST['path1'] : '';
 // $orden = (isset($_POST['orden'])) ? $_POST['orden'] : '';
 // $borrado = (isset($_POST['borrado'])) ? $_POST['borrado'] : '';
@@ -47,7 +56,7 @@ switch($opcion){
 
     case 1:    //turno
         // OBTIENE EL ACCESO DE LOS USUARIOS Y PERMISOS  (Llamado desde el Login.vue)
-
+        //  CAMBIE TABLA USUARIOS por USUARIO ya que tuve que meterla en ESTRIBO.
         $consulta = "SELECT mail, clave FROM usuarios WHERE mail = ?";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(array($mail));                        
@@ -110,41 +119,33 @@ switch($opcion){
         $resultado->execute(array($selecDeporte, $id_usuario, $fturno));                        
         break;        
 
-    case 99:
+    case 9:
         // saca los links de los menues (PANILLA COMPLETA DE MENU-TITULOS Y LINKS)
-        $consulta = "SELECT DISTINCT menu_pantallas.id_menu, menu_pantallas.descripcion_menu, titulos.id_titulo,  
-                            titulos.descripcion_titulo, links.id_link, links.descripcion_link, links.path1, 
-                            links.orden, links.borrado  
-                        FROM menu_pantallas, titulos, links 
-                        WHERE menu_pantallas.id_menu = titulos.id_menu  
-                        AND titulos.id_titulo = links.id_titulo 
-                        AND  links.borrado = 0
-                        AND  titulos.borrado = 0
-                        ORDER BY menu_pantallas.id_menu, titulos.id_titulo, links.orden";
+        //mail, clave , nombre, domicilio, f_nacimiento, telefono, bloqueado,
+        $consulta ="INSERT INTO clientes ( mail, clave , nombre, domicilio, f_nacimiento, telefono, bloqueado) VALUES (?, ?, ?, ?, ?, ?, ?) ";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();                        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado->execute(array($mail, $clave , $nombre, $domicilio, $f_nacimiento, $telefono, $bloqueado));                        
         break;        
 
-    case 99:
+    case 10:
         // Saca solo los Menues  para el DropDown (Llamado desde links.vue)
-        $consulta = "SELECT menu_pantallas.id_menu, menu_pantallas.descripcion_menu
-                        FROM menu_pantallas" ;
+        $consulta = "SELECT id_turno, deporte.descripcion, id_usuario, clientes.mail, clientes.nombre, clientes.telefono, f_turno, cancelado 
+                        FROM turnos, deporte, clientes 
+                        WHERE turnos.id_deporte = deporte.id_deporte 
+                        AND turnos.id_usuario = clientes.id_cliente 
+                        AND turnos.id_deporte = ?
+                        AND f_turno >= ? 
+                        ORDER BY f_turno";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();                        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;     
+        $resultado->execute(array($selecDeporte, $hoy ));  
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);             
+        break;         
         
-    case 99:
+    case 11:
         // Saca solo los Titulos para el DropDown (Llamado desde links.vue)
-        $consulta = "SELECT titulos.id_menu, menu_pantallas.descripcion_menu, titulos.id_titulo, titulos.descripcion_titulo, 
-                            titulos.imagen_path, titulos.footer
-                    FROM menu_pantallas, titulos
-                   WHERE menu_pantallas.id_menu = titulos.id_menu
-                     AND titulos.borrado = 0"; 
+        $consulta = "DELETE FROM turnos WHERE id_turno = ?"; 
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();                        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado->execute(array($id_turno));                        
         break;
 
     case 99:

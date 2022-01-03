@@ -14,11 +14,11 @@
             <InputText id="email1" type="text" class="w-full mb-3" v-model.trim="emailLog"/>
 
             <label for="password1" class="block text-900 font-medium mb-2">Clave</label>
-            <InputText id="password1" type="password" class="w-full mb-3" v-model.trim="claveLog" />
+            <Password  id="password1" type="password"  class="w-full mb-3" v-model.trim="claveLog" />
 
             <div class="flex align-items-center justify-content-between mb-6">
                 <div class="flex align-items-center">
-                    <Checkbox id="rememberme1" :binary="true" v-model.trim="chkRecordarme" class="mr-2"></Checkbox>
+                    <Checkbox id="rememberme1" :binary="true" v-model="chkRecordarme" class="mr-2"></Checkbox>
                     <label for="rememberme1">Recordarme</label>
                 </div>
                 <router-link to="/recuperoclave" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Olvide mi clave?</router-link>
@@ -132,7 +132,7 @@
                 }
 
                         
-                toast.add({severity:'success', summary: 'success', detail: 'Acceso Concedido', life: 3000});
+                toast.add({severity:'success', summary: 'Bienvenido', detail: 'Acceso Concedido', life: 3000});
                 logueado.value = true;
 
       
