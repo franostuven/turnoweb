@@ -1,6 +1,6 @@
 <template>
     <h5 class="mt-3">Seleccione su fecha de Turno</h5>
-     <Calendar id="fecha" v-model="fechaTurno" :inline="true" date-format="dd-mm-yy" :disabledDays="[0,6]" @date-select="dateSelect"
+     <Calendar id="fecha" v-model="fechaTurno" :inline="true" date-format="dd-mm-yy" :disabledDays="disabledDay" @date-select="dateSelect"
             :showTime="false" :minDate="minDate" :maxDate="maxDate"  :disabledDates="invalidDates" class="inputfield w-full">    
 
           <template #date="slotProps">
@@ -16,7 +16,7 @@
 
   export default {
     props:{
-      selecDeporte: String
+      selecDeporte: Number
     },  
     setup(props){
       
@@ -33,7 +33,8 @@
         const PlaniTurnos = inject("PlaniTurnos");
 
         //  ******************************  DEFINICION DE VARIABLES  **************************************************
-        let selDeporte = ref(props.selecDeporte);              // usada en el input
+        let selDeporte = ref(props.selecDeporte);     
+                 // usada en el input
     
       //  const PlaniTurnos = ref();            // Array de fechas con turnos
     //    let repetidos = ref([]);              // array con las fechas repetidas
@@ -44,17 +45,23 @@
         const minDate = ref(new Date());     // Min dia para sacar turno
         const maxDate = ref(new Date());      // Maximo dia para pedir turno
         const invalidDates = ref([]);        // dias invalidos cerrado
-
+        const disabledDay = ref([])         // dias de la semana inhabilitados
         const today = new Date();           // Usado para calcular fechas min y max
         let   diaProximo = ref(0);
         
         let   res = [];                     // array auxiliar de fechas invalidas
 
+        const config_deporte = inject("config_deporte");  // cofig- dias de anticipacion y usuarios_turno
+
         // CALCULOS DE FECHAS PARA EL CALENDARIO
         let month = today.getMonth();
         let year = today.getFullYear();
-        let nextMonth = (month === 11) ? 0 : month + 1;
-        let nextYear = (nextMonth === 0) ? year + 1 : year;
+        // let nextMonth = (month === 11) ? 0 : month + 1;
+        // let nextYear = (nextMonth === 0) ? year + 1 : year;
+       
+        let nextMonth = month ;
+        let nextYear =  year;
+
 
         // CAMBIAR LOS DIAS DE PEDIDOS DE TURNO ANTICIPADO CON DATOS DE LA BASE
         //       indiceDrop = deportes.value.findIndex( element => element.id_deporte === selecDeporte.value );
@@ -63,17 +70,19 @@
         
 
         //  ****************************** FIN PROVIDE DE VARIABLES   **************************************************
+        
 
         if(today.getDay() >=4) {     // cae dia jueves
-            diaProximo.value = 2 + 2;
+            diaProximo.value = parseInt(config_deporte.value.anticipacion) + 2;
         }else{
           if(today.getDay()===0){  //domingo
-            diaProximo.value = 2 + 1;
+            diaProximo.value = parseInt(config_deporte.value.anticipacion) + 1;
             }else{
-              diaProximo.value= 2;
+              diaProximo.value = parseInt(config_deporte.value.anticipacion);
             }
         }
 
+        
         //minDate.value.setDate(today.getDate());
         maxDate.value.setDate(today.getDate() + diaProximo.value);
         maxDate.value.setMonth(nextMonth);
@@ -95,6 +104,22 @@
           .catch(function (error) {
               console.log(error);
           });   
+
+          await axios.post(url, {opcion:5, selecDeporte: selDeporte.value })
+            .then(response=>{
+              const configuraHorarios = response.data;
+            
+             // console.log("horarios:",configuraHorarios)
+            //   let nuevoArray = configuraHorarios[0].dias_sin_atencion.replace(/,/g, "");  // viene "0,3,6"  
+               const  nuevoArray = configuraHorarios[0].dias_sin_atencion;  // viene "0,3,6"  
+
+              disabledDay.value = JSON.parse("[" +nuevoArray +"]");
+         
+            })
+            .catch(function (error) {
+              console.log(error);
+            });   
+                 
       }
  
         // **************************************************  FIN RUTINA DE CARGA INICIAL MOUNTED
@@ -136,13 +161,13 @@
        // horioPorFecha();                 // SACA SOLO HORARIOS DE UNA FECHA
         // console.log(e);  // fecha seleccionada
         // console.log("estoy saliendo del select");
-        // console.log('FECHA turno ', fechaTurno.value);
+      //   console.log('FECHA calendario  ', fechaTurno.value);
         // console.log("DISPLAY DE TURNOS SALIENDO: ",displayCargaTurno.value)
 
         return 
       };
 
-      return { fechaTurno, invalidDates, maxDate, minDate, today, 
+      return { fechaTurno, invalidDates, maxDate, minDate, today, disabledDay,
                dateSelect}
 
     }

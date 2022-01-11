@@ -32,6 +32,7 @@ import Breadcrumb from 'primevue/breadcrumb';
 import Checkbox from 'primevue/checkbox';
 import InlineMessage from 'primevue/inlinemessage';
 import Textarea from 'primevue/textarea';
+import RadioButton from 'primevue/radiobutton';
 
 import 'primevue/resources/themes/saga-blue/theme.css'       //theme
 import 'primevue/resources/primevue.min.css'                 //core css
@@ -50,6 +51,8 @@ import 'primeflex/src/_spacing.scss';
 import 'primeflex/src/_elevation.scss';
  */
 
+// No funca (esta en la carpeta directivas la funcion)
+// import inputUpper from '@/directives/inputUpper'  
 
 const app = createApp(App);
 
@@ -135,6 +138,11 @@ app.component('Breadcrumb',Breadcrumb);
 app.component('Checkbox',Checkbox);
 app.component('InlineMessage',InlineMessage);
 app.component('Textarea',Textarea);
+app.component('RadioButton',RadioButton);
+
+
+//app.directive('input-upper', inputUpper)
+
 
 app.mount('#app');
 

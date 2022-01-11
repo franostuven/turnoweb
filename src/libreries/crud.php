@@ -34,6 +34,24 @@ $f_nacimiento = date('Y-m-d H:i:s', strtotime((isset($_POST['f_nacimiento'])) ? 
 
 $id_turno = (isset($_POST['id_turno'])) ? $_POST['id_turno'] : '';
 
+$id_fecha = (isset($_POST['id_fecha'])) ? $_POST['id_fecha'] : '';
+
+$f_cierre = date('Y-m-d H:i:s', strtotime((isset($_POST['f_cierre'])) ? $_POST['f_cierre'] : ''));
+
+$descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion'] : '';
+
+$dias_sin_atencion = (isset($_POST['dias_sin_atencion'])) ? $_POST['dias_sin_atencion'] : '';
+$d_hora = (isset($_POST['d_hora'])) ? $_POST['d_hora'] : '';
+$h_hora = (isset($_POST['h_hora'])) ? $_POST['h_hora'] : '';
+$intervalo = (isset($_POST['intervalo'])) ? $_POST['intervalo'] : '';
+$d_hora2 = (isset($_POST['d_hora2'])) ? $_POST['d_hora2'] : '';
+$h_hora2 = (isset($_POST['h_hora2'])) ? $_POST['h_hora2'] : '';
+$intervalo2 = (isset($_POST['intervalo2'])) ? $_POST['intervalo2'] : '';
+$id_horario = (isset($_POST['id_horario'])) ? $_POST['id_horario'] : '';
+$id_horario2 = (isset($_POST['id_horario2'])) ? $_POST['id_horario2'] : '';
+
+$diasAnticipados = (isset($_POST['diasAnticipados'])) ? $_POST['diasAnticipados'] : '';
+$usuariosTurno = (isset($_POST['usuariosTurno'])) ? $_POST['usuariosTurno'] : '';
 
 // $path1 = (isset($_POST['path1'])) ? $_POST['path1'] : '';
 // $orden = (isset($_POST['orden'])) ? $_POST['orden'] : '';
@@ -46,13 +64,13 @@ $id_turno = (isset($_POST['id_turno'])) ? $_POST['id_turno'] : '';
 
 switch($opcion){
     case 0:
-       // DEVUELVE EL MAIL DEL USUARIO PARA TURNOS  (Llamado desde  TURNOS.VUE)
-
+        // DEVUELVE EL MAIL DEL USUARIO PARA TURNOS  (Llamado desde  TURNOS.VUE)
         $consulta = "SELECT id_cliente, mail, clave FROM clientes WHERE mail = ?";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(array($mail));                        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;     
+        break;  
+
 
     case 1:    //turno
         // OBTIENE EL ACCESO DE LOS USUARIOS Y PERMISOS  (Llamado desde el Login.vue)
@@ -73,7 +91,7 @@ switch($opcion){
 
     case 3:   //turno
         // Extrae los dias feriados, festivos o cerrados del deporte enviado. (TURNOS.VUE)
-        $consulta = "SELECT f_cierre FROM feriados_cerrado WHERE id_deporte = ?";		
+        $consulta = "SELECT id_fecha, f_cierre, descripcion_fecha FROM feriados_cerrado WHERE id_deporte = ?";		
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(array($selecDeporte));    
         $data=$resultado->fetchAll();                       
@@ -91,7 +109,7 @@ switch($opcion){
     case 5:     //turno
         // Extrae los horarios del deporte seleccionado, hora y dias de apertura  y cierre de la entidad
         // saca los links de los menues (PANTALLA)
-        $consulta = "SELECT d_desde, d_hasta, d_hora, h_hora, intervalo FROM horarios WHERE id_deporte = ?" ;
+        $consulta = "SELECT id_horario, dias_sin_atencion, d_hora, h_hora, intervalo FROM horarios WHERE id_deporte = ?" ;
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(array($selecDeporte));                        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -99,9 +117,14 @@ switch($opcion){
 
     case 6:
         // Envia los datos de una consulta o pregunta para ser leida (CONTACTO.VUE)
-        $consulta = "INSERT INTO consultas (  nombre, apellido, mail, mensaje, fecha) VALUES (?, ?, ?, ?, ?) ";	
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(array($nombre,  $apellido, $mail, $mensaje, $hoy));     
+        try {
+            $consulta = "INSERT INTO consultas (  nombre, apellido, mail, mensaje, fecha) VALUES (?, ?, ?, ?, ?) ";	
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($nombre,  $apellido, $mail, $mensaje, $hoy));  
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }           
         break;
 
     case 7:
@@ -114,17 +137,27 @@ switch($opcion){
 
     case 8:
         // INSERTA EL TURNO SOLICIATDO POR EL USUARIO  (turnos.vue)
-        $consulta = "INSERT INTO turnos ( id_deporte, id_usuario, f_turno) VALUES (?, ?, ?) ";	
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(array($selecDeporte, $id_usuario, $fturno));                        
+        try {
+            $consulta = "INSERT INTO turnos ( id_deporte, id_usuario, f_turno) VALUES (?, ?, ?) ";	
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($selecDeporte, $id_usuario, $fturno));     
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }                           
         break;        
 
     case 9:
         // saca los links de los menues (PANILLA COMPLETA DE MENU-TITULOS Y LINKS)
         //mail, clave , nombre, domicilio, f_nacimiento, telefono, bloqueado,
-        $consulta ="INSERT INTO clientes ( mail, clave , nombre, domicilio, f_nacimiento, telefono, bloqueado) VALUES (?, ?, ?, ?, ?, ?, ?) ";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(array($mail, $clave , $nombre, $domicilio, $f_nacimiento, $telefono, $bloqueado));                        
+        try {
+            $consulta ="INSERT INTO clientes ( mail, clave , nombre, domicilio, f_nacimiento, telefono, bloqueado) VALUES (?, ?, ?, ?, ?, ?, ?) ";
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($mail, $clave , $nombre, $domicilio, $f_nacimiento, $telefono, $bloqueado));   
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }                            
         break;        
 
     case 10:
@@ -143,24 +176,68 @@ switch($opcion){
         
     case 11:
         // Saca solo los Titulos para el DropDown (Llamado desde links.vue)
-        $consulta = "DELETE FROM turnos WHERE id_turno = ?"; 
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(array($id_turno));                        
+        try {
+            $consulta = "DELETE FROM turnos WHERE id_turno = ?"; 
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($id_turno));        
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }                        
         break;
 
-    case 99:
-        // BORRA UN TITULO Y TODOS SUS LINK ASOCIADOS (LLAMADO DESDE TARJETAS.VUE)  se hace un borrado logico
-        //  $consulta = "DELETE FROM links WHERE id_link=? ";	
         
-        $consulta = "UPDATE titulos SET borrado=?  
-                    WHERE id_titulo=? ";		
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(array(1, $id_titulo));      
+    case 12:
+        // Saca solo los Titulos para el DropDown (Llamado desde links.vue)
+        try {
+            $consulta = "DELETE FROM feriados_cerrado WHERE id_fecha = ?"; 
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($id_fecha));    
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }                           
+        break;
+ 
+    case 13:
+        // Envia los datos de una consulta o pregunta para ser leida (CONTACTO.VUE)
+        try {
+            $consulta = "INSERT INTO feriados_cerrado (  id_deporte, f_cierre, descripcion_fecha,  anual) VALUES (?, ?, ?, ?) ";	
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($selecDeporte, $f_cierre, $descripcion, 0));    
 
-        $consulta = "UPDATE links SET borrado=?  
-                    WHERE id_titulo=? ";		
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute(array(1, $id_titulo));                           
+            $data = $conexion->lastInsertId();
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }
+        break;
+
+    case 14:  
+        // Actualiza la tabla de configuracion
+        //UPDATE customer
+        //SET order = CONCAT(order, ', Ravioli');  dias_sin_atencion
+        try {
+
+            $consulta = "UPDATE horarios SET id_deporte = ?, dias_sin_atencion = ?, d_hora = ?, h_hora = ?, intervalo = ?    
+                          WHERE id_horario = ? ";		
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($selecDeporte, $dias_sin_atencion, $d_hora, $h_hora, $intervalo, $id_horario ));      
+
+            $consulta = "UPDATE horarios SET id_deporte = ?, dias_sin_atencion = ?, d_hora = ?, h_hora = ?, intervalo = ?   
+                          WHERE id_horario = ? ";		
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($selecDeporte, $dias_sin_atencion, $d_hora2, $h_hora2, $intervalo2, $id_horario2 )); 
+            
+            $consulta = "UPDATE deporte SET anticipacion = ?, usuarios_por_turno = ?   
+                         WHERE id_deporte = ? ";		
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute(array($diasAnticipados, $usuariosTurno, $selecDeporte )); 
+
+        } catch(PDOExecption $e) {
+            $conexion->rollback();
+            $data = "Error!: " . $e->getMessage() . "</br>";
+        }
         break;    
         
     case 99: 

@@ -1,6 +1,4 @@
  <template>
-
-
  <!-- <header role="banner"> -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2" >
       <div class="container-fluid">
@@ -71,14 +69,18 @@
 
 <script>
   import {inject} from 'vue';
+  import {useRouter} from 'vue-router';
+
   export default {
     setup (){
 
         const logueado = inject('logueado');
+        const router = useRouter();
 
         const cerrarSesion = () => {
           logueado.value = false;
           localStorage.removeItem('turnos')
+          router.push('/')
         }
 
         return{logueado, cerrarSesion}

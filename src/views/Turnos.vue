@@ -78,10 +78,7 @@
       //  USO DEL ROUTER  Y DEL TOAST
       //  router.push('/'),
       //   toast.add({severity:'success', summary: 'Successful', detail: 'Link Actualizado', life: 3000});
-
-      
-
-     
+   
       let fechaTurno = ref(new Date())
      
       // VARIABLES
@@ -96,12 +93,16 @@
       const deportes =ref();               // Array con las disciplinas
       const PlaniTurnos = ref([]);            // Array de fechas con turnos       
       
+      const config_deporte = ref();       // contiene la config. del deporte seleccionado.
+
+      provide('config_deporte', config_deporte);
       provide("f_turno_dh", f_turno_dh);   // Array con los turnos que tomo (usada en ListarTurnos.vue)
       provide('btnDesabilitado', btnDesabilitado); // BOTON DE SUBMIT DESHABILITADO
       provide('displayCargaTurno', displayCargaTurno);  // SWICH PARA HABILITAR HORARIOS
       provide('fechaTurno', fechaTurno); // FECHA DEL TURNO SELECCIONADO
       provide('PlaniTurnos', PlaniTurnos); // Comportir a los 2 componentes 
       const url = inject("url");
+      
 
       //  ***************************  RUTINAS ******************************
       //     maxDate.value = computed (() => maximoDia.value.setDate(today.getDate() + diaProximo.value));
@@ -112,6 +113,7 @@
           await axios.post(url, {opcion:2})
           .then(response=>{
             deportes.value = response.data;
+        //    console.log("TODOS LOS DEPORTES: ",deportes.value)
           })
           .catch(function (error) {
             console.log(error);
@@ -150,7 +152,7 @@
               }
         
           }else{
-              console.log('blur vacio');
+      //        console.log('blur vacio');
           }
       }
 
@@ -177,6 +179,9 @@
             return false
         }
         habilitoDrop.value = true ;
+        
+        config_deporte.value = deportes.value.find( ele => ele.id_deporte === selecDeporte.value );
+
 
       //   console.log("QUE TIENE DEPORTE ?: ",selecDeporte.value)
  // *********************** ARRAY CON LOS TURNOS QUE HAY DESDE HOY EN ADELANTE DE 1 DEPORTE PARTIC. (TABLA TURNOS) **********
@@ -184,7 +189,7 @@
           .then(response =>{
               PlaniTurnos.value = response.data;       
               
-             //   console.log('Datos de PlaniTurnos en calendar: ',PlaniTurnos.value)
+         //    console.log('Datos de PlaniTurnos ',PlaniTurnos.value)
           })
           .catch(function (error) {
             console.log(error);
@@ -204,15 +209,6 @@
           return 
         }
 
-          // probar el for of
-          // for (const iterator of f_turno_dh.value) {
-            
-          // }
-
-          // ninguno de los 2 for funciona no espera el async - await
- //       f_turno_dh.value.forEach(element => {
-      //  for(let i=0; i<f_turno_dh.value.length; i++){
-
 
             let i=0
             let posicion = f_turno_dh.value[i].turno.indexOf(":");   //1 
@@ -221,37 +217,33 @@
             let minuto = f_turno_dh.value[i].turno.substr(posicion+1, largo );
 
             fechaTurno.value.setHours(hora, minuto, 0);
+
+            actualizoTurno(id_Usuario, selecDeporte.value, fechaTurno.value)      
             // ************************************************ 
-                  let ok = '';
+            //       let ok = '';
 
-            await axios.post(url, {opcion:8, id_usuario : id_Usuario, selecDeporte : selecDeporte.value, fturno: fechaTurno.value })
-                  .then( response => {
-                    ok = response.data
+            // await axios.post(url, {opcion:8, id_usuario : id_Usuario, selecDeporte : selecDeporte.value, fturno: fechaTurno.value })
+            //       .then( response => {
+            //         ok = response.data
 
-                    i=1
-                    posicion = f_turno_dh.value[i].turno.indexOf(":");   //1 
-                    largo = f_turno_dh.value[i].turno.length;            // 4
-                    hora = f_turno_dh.value[i].turno.substr(0, posicion );
-                    minuto = f_turno_dh.value[i].turno.substr(posicion+1, largo );
+            //         i=1
+            //         posicion = f_turno_dh.value[i].turno.indexOf(":");   //1 
+            //         largo = f_turno_dh.value[i].turno.length;            // 4
+            //         hora = f_turno_dh.value[i].turno.substr(0, posicion );
+            //         minuto = f_turno_dh.value[i].turno.substr(posicion+1, largo );
 
-                    fechaTurno.value.setHours(hora, minuto, 0);
+            //         fechaTurno.value.setHours(hora, minuto, 0);
                   
-                    actualizoTurno(id_Usuario, selecDeporte.value, fechaTurno.value)            
+            //         actualizoTurno(id_Usuario, selecDeporte.value, fechaTurno.value)            
 
-                  })
+            //       })
 
-                  .catch(function (error) {
-                  console.log(error);
-                });                   
+            //       .catch(function (error) {
+            //       console.log(error);
+            //     });                   
  
 
-   //     };
-
-
-        // f_turno_dh.value.forEach(element => {
-        //   actualizoTurno(mailUsuario.value, selecDeporte.value, element.turno)
-        // });
-        
+       
 
         toast.add({severity:'success', summary: 'Turno Agendado', detail: 'El turno se Agrego Satisfactoriamente.', life: 3000});
 
@@ -267,7 +259,7 @@
       const actualizoTurno = async (a,b,c) => {
           let ok = '';
 
-          console.log("A GAURDAR:", c)
+       //   console.log("A GAURDAR:", c)
           await axios.post(url, {opcion:8, id_usuario : a, selecDeporte : b, fturno: c })
                 .then( response => {
                   ok = response.data
